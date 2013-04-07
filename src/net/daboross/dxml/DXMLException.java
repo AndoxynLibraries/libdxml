@@ -1,4 +1,4 @@
-package net.daboross.xmlhelpers;
+package net.daboross.dxml;
 
 /**
  *
