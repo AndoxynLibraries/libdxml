@@ -31,6 +31,7 @@ public class DXMLHelper {
     private static final Transformer transformer;
     private static final DocumentBuilderFactory docFactory;
     private static final DocumentBuilder docBuilder;
+    private static final Object documentBuildingLock = new Object();
 
     static {
         transformerFactory = TransformerFactory.newInstance();
@@ -59,40 +60,48 @@ public class DXMLHelper {
     }
 
     public static Document newDocument() throws DXMLException {
-        if (docBuilder == null) {
-            throw new DXMLException("Null DocBuilder");
+        synchronized (documentBuildingLock) {
+            if (docBuilder == null) {
+                throw new DXMLException("Null DocBuilder");
+            }
+            return docBuilder.newDocument();
         }
-        return docBuilder.newDocument();
     }
 
     public static Document readDocument(File source) throws DXMLException {
-        if (docBuilder == null) {
-            throw new DXMLException("Null DocBuilder");
-        }
-        try {
-            return docBuilder.parse(source);
-        } catch (SAXException | IOException ex) {
-            throw new DXMLException(ex);
+        synchronized (documentBuildingLock) {
+            if (docBuilder == null) {
+                throw new DXMLException("Null DocBuilder");
+            }
+            try {
+                return docBuilder.parse(source);
+            } catch (SAXException | IOException ex) {
+                throw new DXMLException(ex);
+            }
         }
     }
 
     public static Document readDocument(InputStream source) throws DXMLException {
-        if (docBuilder == null) {
-            throw new DXMLException("Null DocBuilder");
-        }
-        try {
-            return docBuilder.parse(source);
-        } catch (SAXException | IOException ex) {
-            throw new DXMLException(ex);
+        synchronized (documentBuildingLock) {
+            if (docBuilder == null) {
+                throw new DXMLException("Null DocBuilder");
+            }
+            try {
+                return docBuilder.parse(source);
+            } catch (SAXException | IOException ex) {
+                throw new DXMLException(ex);
+            }
         }
     }
 
     public static void writeXML(Document source, File file) throws DXMLException {
-        if (source == null || file == null) {
-            throw new IllegalArgumentException("1 or more null arguments");
+        synchronized (documentBuildingLock) {
+            if (source == null || file == null) {
+                throw new IllegalArgumentException("1 or more null arguments");
+            }
+            Result result = new StreamResult(file);
+            writeXML(source, result);
         }
-        Result result = new StreamResult(file);
-        writeXML(source, result);
     }
 
     public static void writeXML(Document source, Result result) throws DXMLException {
@@ -104,16 +113,18 @@ public class DXMLHelper {
     }
 
     public static void writeXML(Source source, Result result) throws DXMLException {
-        if (source == null || result == null) {
-            throw new IllegalArgumentException("1 or more null arguments");
-        }
-        if (transformer == null) {
-            throw new DXMLException("Null Transformer");
-        }
-        try {
-            transformer.transform(source, result);
-        } catch (TransformerException ex) {
-            throw new DXMLException(ex);
+        synchronized (documentBuildingLock) {
+            if (source == null || result == null) {
+                throw new IllegalArgumentException("1 or more null arguments");
+            }
+            if (transformer == null) {
+                throw new DXMLException("Null Transformer");
+            }
+            try {
+                transformer.transform(source, result);
+            } catch (TransformerException ex) {
+                throw new DXMLException(ex);
+            }
         }
     }
 
