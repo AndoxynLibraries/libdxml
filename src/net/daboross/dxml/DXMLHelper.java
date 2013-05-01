@@ -75,8 +75,10 @@ public class DXMLHelper {
             }
             try {
                 return docBuilder.parse(source);
-            } catch (SAXException | IOException ex) {
-                throw new DXMLException(ex);
+            } catch (SAXException saxe) {
+                throw new DXMLException(saxe);
+            } catch (IOException ioe) {
+                throw new DXMLException(ioe);
             }
         }
     }
@@ -88,8 +90,10 @@ public class DXMLHelper {
             }
             try {
                 return docBuilder.parse(source);
-            } catch (SAXException | IOException ex) {
-                throw new DXMLException(ex);
+            } catch (SAXException saxe) {
+                throw new DXMLException(saxe);
+            } catch (IOException ioe) {
+                throw new DXMLException(ioe);
             }
         }
     }
