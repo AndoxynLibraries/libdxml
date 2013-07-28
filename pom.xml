@@ -3,9 +3,10 @@
     <groupId>net.daboross.dxml</groupId>
     <artifactId>DXMLLibrary</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.0.0</version>
     <name>DXMLLibrary</name>
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
