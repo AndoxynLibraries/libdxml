@@ -59,9 +59,7 @@ public class DXMLHelper {
             transformerTemp = null;
         }
         if (transformerTemp != null) {
-            transformerTemp.setOutputProperty(OutputKeys.INDENT, "yes");
             transformerTemp.setOutputProperty(OutputKeys.STANDALONE, "yes");
-            transformerTemp.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         }
         transformer = transformerTemp;
         docFactory = DocumentBuilderFactory.newInstance();
